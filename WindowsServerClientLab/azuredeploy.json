@@ -263,7 +263,7 @@
               "uri": "[variables('osDiskUrl')]"
             },
             "vhd": {
-              "uri": "[concat('http://', variables('vhdStorageName'), '.blob.core.windows.net/', variables('vhdStorageContainerName'), '/', variables('client'),copyindex(), '.vhd')]"
+              "uri": "[concat('http://', 'bhakstorage', '.blob.core.windows.net/', variables('vhdStorageContainerName'), '/', variables('client'),copyindex(), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
