@@ -63,11 +63,12 @@
   "variables": {
 
     "client": "client",
-    "server" :  "server",
+    "server": "server",
 
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
     "OSDiskName": "osdiskforwindowssimple",
+    "osDiskUrl": "https://bhakstorage.blob.core.windows.net/bhakstorage/win7s-win7-2016-01-18.vhd",
 
     "addressPrefixVnet": "10.0.0.0/16",
     "subnetName": "Subnet",
