@@ -23,6 +23,21 @@
         "description": "Password for the Virtual Machines."
       }
     },
+
+    "clientOsDiskStorageAccount": {
+      "type": "string",
+      "defaultValue" :  "bhakstorage"
+    },
+    "clientOsDiskStorageAccountContainer": {
+      "type": "string",
+      "defaultValue": "n4bs4fyl5ylvs"
+    },
+    "clientOsDiskName": {
+      "defaultValue": "client1.vhd",
+      "type": "string"
+    },
+
+
     "dnsNameForPublicIP": {
       "type": "string",
       "minLength": 1,
@@ -68,7 +83,7 @@
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
     "OSDiskName": "osdiskforwindowssimple",
-    "osDiskUrl": "https://bhakstorage.blob.core.windows.net/bhakstorage/win7s-win7-2016-01-18.vhd",
+    "clientOsDiskUrl": "[concat('http://', parameters('clientOsDiskStorageAccount'), '.blob.core.windows.net/', parameters('clientOsDiskStorageAccountContainer'), '/', parameters('clientOsDiskName'))]",
 
     "addressPrefixVnet": "10.0.0.0/16",
     "subnetName": "Subnet",
@@ -212,6 +227,7 @@
         "displayName": "NetworkInterface"
       },
       "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('server'),'pip_',copyindex())]",
         "[concat('Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'),copyindex())]"
       ],
       "properties": {
@@ -221,8 +237,11 @@
             "properties": {
               "privateIPAllocationMethod": "Static",
               "privateIPAddress": "10.0.0.5",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses/', concat(variables('server'),'pip_',copyindex()))]"
+              },
               "subnet": {
-                "id":"[concat(resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName')),copyindex(), '/subnets/', variables('subnetName'))]"
+                "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName')),copyindex(), '/subnets/', variables('subnetName'))]"
               }
             }
           }
@@ -260,10 +279,10 @@
             "osType": "windows",
 
             "image": {
-              "uri": "[variables('osDiskUrl')]"
+              "uri": "[variables('clientOsDiskUrl')]"
             },
             "vhd": {
-              "uri": "[concat('http://', 'bhakstorage', '.blob.core.windows.net/', variables('vhdStorageContainerName'), '/', variables('client'),copyindex(), '.vhd')]"
+              "uri": "[concat('http://', parameters('clientOsDiskStorageAccount'), '.blob.core.windows.net/', uniqueString(resourceGroup().id), '/', variables('client') ,copyindex(), '.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
